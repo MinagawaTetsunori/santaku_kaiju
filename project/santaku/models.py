@@ -8,6 +8,8 @@ class CustomerBot(models.Model):
     客人役のボットデータ最上部
     '''
     name = models.CharField(max_length=20)
+    def __str__(self):
+        return self.name
 
 
 class CustomerBotFlow(models.Model):
