@@ -8,6 +8,8 @@ class CustomerBot(models.Model):
     客人役のボットデータ最上部
     '''
     name = models.CharField(max_length=20)
+    persona_status1 = models.CharField()
+
     def __str__(self):
         return self.name
 
@@ -17,7 +19,10 @@ class CustomerBotFlow(models.Model):
     客人役の対話フロー
     '''
     customer_bot_id = models.ForeignKey(CustomerBot, on_delete=models.CASCADE)
-    talk_text = models.CharField(max_length=CHAR_DEFAULT_MAX_LENGTH)
+    my_flow_id = models.IntegerField()
+    utt_text = models.CharField(max_length=CHAR_DEFAULT_MAX_LENGTH)
+    utt_element1 = models.CharField()
+    utt_elemnet2 = models.CharField()
 
     # sales_pitchはitemが持つ効能も副作用も含む
     SNATAKU_ATTRIBUTES = {
@@ -29,6 +34,8 @@ class CustomerBotFlow(models.Model):
         choices=SNATAKU_ATTRIBUTES, default=YESNO)
 
     # sはsantakuの頭文字
+    # CustomerBotのpersona_statusとutt_elementから選択肢の
+    # s_nameとconciliation_add_pointと
     s1_name = models.CharField(
         max_length=CHAR_DEFAULT_MAX_LENGTH, default='選択肢名1')
     s1_conciliation_add_point = models.IntegerField(default=0)  # 懐柔(ゲームでは怪柔)
@@ -47,6 +54,19 @@ class CustomerBotFlow(models.Model):
     s3_res = models.CharField(
         max_length=CHAR_DEFAULT_MAX_LENGTH, default='客役の応答3')
     s3_branch = models.IntegerField(default=0)
+
+
+    class Meta:
+        constraints = [
+            # テストCheckConstraint
+            models.CheckConstraint(
+                check=Q(utt_element1='a'), name='a_limit'
+            ),
+            models.UniqueConstraint(
+                fields=['customer_bot_id', 'my_flow_id'],
+                name='flow_unique'
+            )
+        ]
 
 
 class MerchantBot(models.Model):
