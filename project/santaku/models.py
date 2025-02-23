@@ -19,6 +19,15 @@ class CustomerBotFlow(models.Model):
     customer_bot_id = models.ForeignKey(CustomerBot, on_delete=models.CASCADE)
     talk_text = models.CharField(max_length=CHAR_DEFAULT_MAX_LENGTH)
 
+    # sales_pitchはitemが持つ効能も副作用も含む
+    SNATAKU_ATTRIBUTES = {
+        YESNO: 'yesno',
+        ITEM: 'item',
+        ITEM_SALES_PITCH: 'item_sales_pitch'
+    }
+    santaku_attribute = models.CharField(
+        choices=SNATAKU_ATTRIBUTES, default=YESNO)
+
     # sはsantakuの頭文字
     s1_name = models.CharField(
         max_length=CHAR_DEFAULT_MAX_LENGTH, default='選択肢名1')
