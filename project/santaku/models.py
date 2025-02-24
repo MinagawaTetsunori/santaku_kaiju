@@ -38,21 +38,21 @@ class CustomerBotFlow(models.Model):
     # s_nameとconciliation_add_pointと
     s1_name = models.CharField(
         max_length=CHAR_DEFAULT_MAX_LENGTH, default='選択肢名1')
-    s1_conciliation_add_point = models.IntegerField(default=0)  # 懐柔(ゲームでは怪柔)
-    s1_res = models.CharField(
-        max_length=CHAR_DEFAULT_MAX_LENGTH, default='客役の応答1')
-    s1_branch = models.IntegerField(default=0)
     s2_name = models.CharField(
         max_length=CHAR_DEFAULT_MAX_LENGTH, default='選択肢名2')
-    s2_conciliation_add_point = models.IntegerField(default=0)
-    s2_res = models.CharField(
-        max_length=CHAR_DEFAULT_MAX_LENGTH, default='客役の応答2')
-    s2_branch = models.IntegerField(default=0)
     s3_name = models.CharField(
         max_length=CHAR_DEFAULT_MAX_LENGTH, default='選択肢名3')
+    s1_conciliation_add_point = models.IntegerField(default=0)  # 懐柔(ゲームでは怪柔)
+    s2_conciliation_add_point = models.IntegerField(default=0)
     s3_conciliation_add_point = models.IntegerField(default=0)
+    s1_res = models.CharField(
+        max_length=CHAR_DEFAULT_MAX_LENGTH, default='客役の応答1')
+    s2_res = models.CharField(
+        max_length=CHAR_DEFAULT_MAX_LENGTH, default='客役の応答2')
     s3_res = models.CharField(
         max_length=CHAR_DEFAULT_MAX_LENGTH, default='客役の応答3')
+    s1_branch = models.IntegerField(default=0)
+    s2_branch = models.IntegerField(default=0)
     s3_branch = models.IntegerField(default=0)
 
 
