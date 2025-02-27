@@ -66,8 +66,21 @@ def game():
     '''
     ゲームのメイン部分
     '''
-    FLOW = [
-        {'talk': 'aaaa', 'santaku': ['a', 'b', 'c']}
+    # 客役のサンプルフロー
+    SCENARIO_FLOW = [
+        {
+            'event_id': 1,
+            'utt': 'aaaa',
+            'hints': {'purpose': '', 'relation': '', 'support': ''},
+            'branch':{
+                'nega': {
+                    'customer_response_utt': 'aaa',
+                    'jump_event_id': 0
+                },
+                'neut': {},
+                'posi': {}
+            }
+        }
     ]
 
 
