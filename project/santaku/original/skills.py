@@ -1,4 +1,5 @@
 # skill名は後に考案
+# sortタイプとfilterタイプの関数に分ける
 
 def skill_1() -> int:
     '''
@@ -40,13 +41,13 @@ def skill_5() -> int:
     return 0
 
 
-def skill_6():
+def skill_6() -> int:
     '''
     指定選択肢のbranch先が持つ最小値を返す
     戦略：最小値が1という場合もあるためボーナス発見として利用可能
     '''
     return 0
-    
+
 
 
 if __name__=='__main__':
