@@ -1,28 +1,28 @@
 import random
 
-HINT_KAIJU_POINTS = {
-    '目的': {
-        '修復': {'nega': 0, 'neut': 0, 'posi': 0},
-        '成長': {'nega': 0, 'neut': 1, 'posi': 0},
-        '復讐': {'nega': 1, 'neut': 1, 'posi': 0}
-    },
-    '対象者': {
-        '自分': {'nega': 0, 'neut': 0, 'posi': 0},
-        '親しい人': {'nega': 1, 'neut': 0, 'posi': 1},
-        'その他': {'nega': 1, 'neut': 0, 'posi': 0}
-    },
-    '要求対応': {
-        '共感': {'nega': 0, 'neut': 0, 'posi': 0},
-        'アドバイス': {'nega': 0, 'neut': 1, 'posi': 1},
-        '後押し': {'nega': 0, 'neut': 0, 'posi': 1}
-    }
-}
+# HINT_KAIJU_POINTS = {
+#     '目的': {
+#         '修復': {'nega': 0, 'neut': 0, 'posi': 0},
+#         '成長': {'nega': 0, 'neut': 1, 'posi': 0},
+#         '復讐': {'nega': 1, 'neut': 1, 'posi': 0}
+#     },
+#     '対象者': {
+#         '自分': {'nega': 0, 'neut': 0, 'posi': 0},
+#         '親しい人': {'nega': 1, 'neut': 0, 'posi': 1},
+#         'その他': {'nega': 1, 'neut': 0, 'posi': 0}
+#     },
+#     '要求対応': {
+#         '共感': {'nega': 0, 'neut': 0, 'posi': 0},
+#         'アドバイス': {'nega': 0, 'neut': 1, 'posi': 1},
+#         '後押し': {'nega': 0, 'neut': 0, 'posi': 1}
+#     }
+# }
 
-USER_TYPE = {
-    'ポジティブ': {'need': 'posi'},
-    'ニュートラル': {'need': 'neut'},
-    'ネガティブ': {'need': 'nega'}
-}
+# USER_TYPE = {
+#     'ポジティブ': {'need': 'posi'},
+#     'ニュートラル': {'need': 'neut'},
+#     'ネガティブ': {'need': 'nega'}
+# }
 
 
 def gacha_ability(keeped_ability: dict[str, int]) -> list[str]:
@@ -85,6 +85,46 @@ def game():
 
 
 
+class Merchant:
+    def __init__(self, name: str):
+        self.name = name
+        self.rules: list[self.Rule] = [self.Rule()]
+    
+    def add_empty_rule(self) -> None:
+        self.rules.Add(self.Rule())
+
+    class Rule:
+        def __init__(self):
+            self.output_santaku: str = 'neut'
+            self.conditions: list[self.Condition] = []
+
+    class Condition:
+        def __init__(self):
+            self.left_val = 'neut'
+            self.right_val = 'neut'
+            self.operator = '=='
+        
+        def set_elm(self, key_name: str, val_name: str) -> None:
+            SIDE_VALS = ['nega', 'neut', 'posi']
+            OPE_VALS = []
+
+            match key_name:
+                case 'operator':
+                    if val_name in OPE_VALS:
+                        self.operator = val_name
+                    else:
+                        raise ValueError('not {val_name} in OPE_VALS')
+                case 'left' or 'right':
+                    if val_name in SIDE_VALS:
+                        if key_name == 'left': self.left_val = val_name
+                        if key_name == 'right': self.right_val = val_name
+                    else:
+                        raise ValueError('not {val_name} in SIDE_VALS')
+                case _:
+                    raise ValueError('not {key_name} in KEYS')
+            
+
+
 if __name__=='__main__':
-    game()
-    print('hello')
+    merchant = Merchant('AA')
+    print(merchant.rules[0].output_santaku)
