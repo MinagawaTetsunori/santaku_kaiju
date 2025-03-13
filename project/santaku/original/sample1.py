@@ -106,7 +106,7 @@ class Merchant:
         
         def set_elm(self, key_name: str, val_name: str) -> None:
             SIDE_VALS = ['nega', 'neut', 'posi']
-            OPE_VALS = []
+            OPE_VALS = ['==', '<', '>']
 
             match key_name:
                 case 'operator':
