@@ -88,6 +88,7 @@ def game():
 class Merchant:
     def __init__(self, name: str):
         self.name = name
+        self.bounus_santaku = 'neut'
         self.rules: list[self.Rule] = [self.Rule()]
     
     def add_empty_rule(self) -> None:
