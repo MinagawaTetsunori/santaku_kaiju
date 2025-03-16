@@ -86,20 +86,55 @@ def game():
 
 
 class Merchant:
-    def __init__(self, name: str):
+    def __init__(self, name: str = 'unknown'):
         self.name = name
         self.bounus_santaku = 'neut'
-        self.rules: list[self.Rule] = [self.Rule()]
+        self.bullets: list[self.Bullet] = [self.Bullet()]
     
-    def add_empty_rule(self) -> None:
-        self.rules.Add(self.Rule())
+    def add_new_bullet(self) -> None:
+        self.bullets.Add(self.Bullet())
+    
+    def shoot_bullet(self, customer_id: int, flow_id: int) -> str:
+        '''
+        客役idとflow_idで現状を指定したら商人役の行動を返す
+        '''
+        output_santaku: str = 'neut'
 
-    class Rule:
+        for bullet: Bullet in self.bullets:
+            output_santaku = bullet.output_santaku
+            for cond: ShootingCondition in conds:
+                match cond.operator:
+                case '==':
+                    continue
+                case '<':
+                    continue
+                case '>':
+                    continue
+                case _:
+                    continue
+
+        return output_santaku
+
+    class Bullet:
         def __init__(self):
             self.output_santaku: str = 'neut'
-            self.conditions: list[self.Condition] = []
+            self.conds: list[ShootingCondition] = [Merchant.ShootingCondition()]
+        
+        def add_new_shooting_cond() -> None:
+            '''
+            新規のshoting_condを生成してcondsに追加
+            '''
+            self.conds.Add(ShootingCondition())
+        
+        def is_shoot() -> bool:
+            '''
+            このBulletが現在の客役idとflow_idにおいて条件を満たすか返す
+            '''
+            for shooting_condition in self.conds:
+                return False
+            return True
 
-    class Condition:
+    class ShootingCondition:
         def __init__(self):
             self.left_val = 'neut'
             self.right_val = 'neut'
@@ -115,7 +150,7 @@ class Merchant:
                         self.operator = val_name
                     else:
                         raise ValueError('not {val_name} in OPE_VALS')
-                case 'left' or 'right':
+                case 'left'|'right':
                     if val_name in SIDE_VALS:
                         if key_name == 'left': self.left_val = val_name
                         if key_name == 'right': self.right_val = val_name
@@ -128,4 +163,4 @@ class Merchant:
 
 if __name__=='__main__':
     merchant = Merchant('AA')
-    print(merchant.rules[0].output_santaku)
+    print(merchant.shoot_bullet(0, 0))
