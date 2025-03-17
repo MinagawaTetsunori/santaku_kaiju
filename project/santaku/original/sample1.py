@@ -102,18 +102,26 @@ class Merchant:
 
         for bullet: Bullet in self.bullets:
             output_santaku = bullet.output_santaku
+            left_val: float = calc_scval()
+            left_val: float = calc_scval()
+            is_shoot: bool = True
             for cond: ShootingCondition in conds:
                 match cond.operator:
-                case '==':
-                    continue
-                case '<':
-                    continue
-                case '>':
-                    continue
-                case _:
-                    continue
+                    case '==':
+                        if left_val == right_val: continue
+                    case '<':
+                        if left_val < right_val: continue
+                    case '>':
+                        if left_val > right_val: continue
+                    case _:
+                        raise ValueError('not cond operater')
+                is_shoot = False
+                break
 
         return output_santaku
+    
+    def calc_scval() -> float:
+        return 0.0
 
     class Bullet:
         def __init__(self):
@@ -126,13 +134,13 @@ class Merchant:
             '''
             self.conds.Add(ShootingCondition())
         
-        def is_shoot() -> bool:
-            '''
-            このBulletが現在の客役idとflow_idにおいて条件を満たすか返す
-            '''
-            for shooting_condition in self.conds:
-                return False
-            return True
+        # def is_shoot() -> bool:
+        #     '''
+        #     このBulletが現在の客役idとflow_idにおいて条件を満たすか返す
+        #     '''
+        #     for shooting_condition in self.conds:
+        #         return False
+        #     return True
 
     class ShootingCondition:
         def __init__(self):
