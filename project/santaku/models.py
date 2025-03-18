@@ -25,28 +25,18 @@ class CustomerBotFlow(models.Model):
     front_customer_utt = models.TextField(
         max_length=CHAR_DEFAULT_MAX_LENGTH,default='客役の冒頭発話')
 
-    hint_purpose = models.CharField(
-        max_length=CHAR_DEFAULT_MAX_LENGTH,
-        default='repair',
-        choices={'REP': 'repair', 'GRO': 'grows', 'REV': 'revenge'}
+    s1_point = models.IntegerField(
+        default=0,
+        choices={-1: -1, 0: 0, 1: 1}
     )
-    hint_relation = models.CharField(
-        max_length=CHAR_DEFAULT_MAX_LENGTH,
-        default='myself',
-        choices={'MYS': 'myself', 'IMP': 'important', 'OTH': 'other'}
+    s2_point = models.IntegerField(
+        default=0,
+        choices={-1: -1, 0: 0, 1: 1}
     )
-    hint_support = models.CharField(
-        max_length=CHAR_DEFAULT_MAX_LENGTH,
-        default='empathy',
-        choices={'EMP': 'empathy', 'ADV': 'advice', 'BOO': 'boost'}
+    s3_point = models.IntegerField(
+        default=0,
+        choices={-1: -1, 0: 0, 1: 1}
     )
-
-    s1_back_customer_utt = models.TextField(
-        max_length=CHAR_DEFAULT_MAX_LENGTH, default='客役の事後発話1')
-    s2_back_customer_utt = models.TextField(
-        max_length=CHAR_DEFAULT_MAX_LENGTH, default='客役の事後発話2')
-    s3_back_customer_utt = models.TextField(
-        max_length=CHAR_DEFAULT_MAX_LENGTH, default='客役の事後発話3')
 
     s1_branch = models.IntegerField(
         validators=[MinValueValidator(0), MaxValueValidator(100)], default=0)
@@ -54,6 +44,13 @@ class CustomerBotFlow(models.Model):
         validators=[MinValueValidator(0), MaxValueValidator(100)], default=0)
     s3_branch = models.IntegerField(
         validators=[MinValueValidator(0), MaxValueValidator(100)], default=0)
+
+    s1_back_customer_utt = models.TextField(
+        max_length=CHAR_DEFAULT_MAX_LENGTH, default='')
+    s2_back_customer_utt = models.TextField(
+        max_length=CHAR_DEFAULT_MAX_LENGTH, default='')
+    s3_back_customer_utt = models.TextField(
+        max_length=CHAR_DEFAULT_MAX_LENGTH, default='')
 
 
     def __str__(self):
