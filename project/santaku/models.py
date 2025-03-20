@@ -22,35 +22,35 @@ class CustomerBotFlow(models.Model):
     '''
     customer_bot_id = models.ForeignKey(CustomerBot, on_delete=models.CASCADE)
     my_flow_id = models.IntegerField(default=0)
+
+    nega_point = models.IntegerField(
+        default=0,
+        choices={-1: -1, 0: 0, 1: 1}
+    )
+    neut_point = models.IntegerField(
+        default=0,
+        choices={-1: -1, 0: 0, 1: 1}
+    )
+    posi_point = models.IntegerField(
+        default=0,
+        choices={-1: -1, 0: 0, 1: 1}
+    )
+
+    nega_branch = models.IntegerField(
+        validators=[MinValueValidator(-1), MaxValueValidator(100)], default=0)
+    neut_branch = models.IntegerField(
+        validators=[MinValueValidator(-1), MaxValueValidator(100)], default=0)
+    posi_branch = models.IntegerField(
+        validators=[MinValueValidator(-1), MaxValueValidator(100)], default=0)
+
     front_customer_utt = models.TextField(
-        max_length=CHAR_DEFAULT_MAX_LENGTH,default='客役の冒頭発話')
-
-    s1_point = models.IntegerField(
-        default=0,
-        choices={-1: -1, 0: 0, 1: 1}
-    )
-    s2_point = models.IntegerField(
-        default=0,
-        choices={-1: -1, 0: 0, 1: 1}
-    )
-    s3_point = models.IntegerField(
-        default=0,
-        choices={-1: -1, 0: 0, 1: 1}
-    )
-
-    s1_branch = models.IntegerField(
-        validators=[MinValueValidator(0), MaxValueValidator(100)], default=0)
-    s2_branch = models.IntegerField(
-        validators=[MinValueValidator(0), MaxValueValidator(100)], default=0)
-    s3_branch = models.IntegerField(
-        validators=[MinValueValidator(0), MaxValueValidator(100)], default=0)
-
+        max_length=CHAR_DEFAULT_MAX_LENGTH,default='', blank=True)
     s1_back_customer_utt = models.TextField(
-        max_length=CHAR_DEFAULT_MAX_LENGTH, default='')
+        max_length=CHAR_DEFAULT_MAX_LENGTH, default='', blank=True)
     s2_back_customer_utt = models.TextField(
-        max_length=CHAR_DEFAULT_MAX_LENGTH, default='')
+        max_length=CHAR_DEFAULT_MAX_LENGTH, default='', blank=True)
     s3_back_customer_utt = models.TextField(
-        max_length=CHAR_DEFAULT_MAX_LENGTH, default='')
+        max_length=CHAR_DEFAULT_MAX_LENGTH, default='', blank=True)
 
 
     def __str__(self):
