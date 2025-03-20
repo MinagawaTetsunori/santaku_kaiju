@@ -1,4 +1,5 @@
 import random
+    import MySQLdb
 
 
 def gacha_ability(keeped_ability: dict[str, int]) -> list[str]:
@@ -76,12 +77,12 @@ class Merchant:
         '''
         output_santaku: str = 'neut'
 
-        for bullet: Bullet in self.bullets:
+        for bullet in self.bullets:
             output_santaku = bullet.output_santaku
             left_val: float = calc_scval()
             left_val: float = calc_scval()
             is_shoot: bool = True
-            for cond: ShootingCondition in conds:
+            for cond in conds:
                 match cond.operator:
                     case '==':
                         if left_val == right_val: continue
@@ -146,5 +147,15 @@ class Merchant:
 
 
 if __name__=='__main__':
-    merchant = Merchant('AA')
-    print(merchant.shoot_bullet(0, 0))
+    # merchant = Merchant('AA')
+    # print(merchant.shoot_bullet(0, 0))
+    connection = MySQLdb.connect(
+        host='db',
+        user='root',
+        passwd='root',
+        db='santaku_db')
+    cursor = connection.cursor()
+    cursor.execute('SELECT * FROM santaku_customerbotflow')
+    rows = cursor.fetchall()
+    print(rows)
+    connection.close()
