@@ -98,7 +98,7 @@ class Merchant:
 
         return output_santaku
     
-    def calc_scval(customer_id: int, flow_id: int, calc_cmd: str) -> float:
+    def calc_scval(self, customer_id: int, flow_id: int, calc_cmd: str) -> float:
         '''
         左右の変数を計算方法を指定した後に計算して返す
         '''
@@ -113,7 +113,12 @@ class Merchant:
         match calc_cmd:
             case 'nega'|'neut'|'posi':
                 cursor.execute(
-                    'SELECT {calc_cmd}_point FROM santaku_customerbotflow')
+                    f'''
+                    SELECT {calc_cmd}_point FROM santaku_customerbotflow 
+                    WHERE 
+                    customer_bot_id = {customer_id} and 
+                    my_flow_id = {flow_id}
+                    ''')
                 rslt_scval = float(cursor.fetchone()[0])
             case _:
                 pass
@@ -162,15 +167,15 @@ class Merchant:
 
 
 if __name__=='__main__':
-    # merchant = Merchant('AA')
-    # print(merchant.shoot_bullet(0, 0))
-    connection = MySQLdb.connect(
-        host='db',
-        user='root',
-        passwd='root',
-        db='santaku_db')
-    cursor = connection.cursor()
-    cursor.execute('SELECT posi_point FROM santaku_customerbotflow')
-    rows = cursor.fetchone()[0]
-    print(rows)
-    connection.close()
+    merchant = Merchant('AA')
+    print(merchant.calc_scval(1, 0, 'neut'))
+    # connection = MySQLdb.connect(
+    #     host='db',
+    #     user='root',
+    #     passwd='root',
+    #     db='santaku_db')
+    # cursor = connection.cursor()
+    # cursor.execute('SELECT * FROM santaku_customerbotflow')
+    # rows = cursor.fetchall()
+    # print(rows)
+    # connection.close()
