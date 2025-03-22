@@ -1,5 +1,5 @@
 import random
-    import MySQLdb
+import MySQLdb
 
 
 def gacha_ability(keeped_ability: dict[str, int]) -> list[str]:
@@ -75,21 +75,22 @@ class Merchant:
         '''
         客役idとflow_idで現状を指定したら商人役の行動を返す
         '''
-        output_santaku: str = 'neut'
+        DEFAULT_SANTAKU = 'neut'
+        output_santaku: str = DEFAULT_SANTAKU
 
         for bullet in self.bullets:
             output_santaku = bullet.output_santaku
-            left_val: float = calc_scval()
-            left_val: float = calc_scval()
             is_shoot: bool = True
             for cond in conds:
+                left_num: float = calc_scval(customer_id, flow_id, cond.left_cmd)
+                right_num: float = calc_scval(customer_id, flow_id, cond.right_cmd)
                 match cond.operator:
                     case '==':
-                        if left_val == right_val: continue
+                        if left_num == right_num: continue
                     case '<':
-                        if left_val < right_val: continue
+                        if left_num < right_num: continue
                     case '>':
-                        if left_val > right_val: continue
+                        if left_num > right_num: continue
                     case _:
                         raise ValueError('not cond operater')
                 is_shoot = False
@@ -97,8 +98,29 @@ class Merchant:
 
         return output_santaku
     
-    def calc_scval() -> float:
+    def calc_scval(customer_id: int, flow_id: int, calc_cmd: str) -> float:
+        '''
+        左右の変数を計算方法を指定した後に計算して返す
+        '''
+        connection = MySQLdb.connect(
+            host='db',
+            user='root',
+            passwd='root',
+            db='santaku_db')
+        cursor = connection.cursor()
+        rslt_scval: float = 0.0
+
+        match calc_cmd:
+            case 'nega'|'neut'|'posi':
+                cursor.execute(
+                    'SELECT {calc_cmd}_point FROM santaku_customerbotflow')
+                rslt_scval = float(cursor.fetchone()[0])
+            case _:
+                pass
+
+        connection.close()
         return 0.0
+
 
     class Bullet:
         def __init__(self):
@@ -110,37 +132,30 @@ class Merchant:
             新規のshoting_condを生成してcondsに追加
             '''
             self.conds.Add(ShootingCondition())
-        
-        # def is_shoot() -> bool:
-        #     '''
-        #     このBulletが現在の客役idとflow_idにおいて条件を満たすか返す
-        #     '''
-        #     for shooting_condition in self.conds:
-        #         return False
-        #     return True
+
 
     class ShootingCondition:
         def __init__(self):
-            self.left_val = 'neut'
-            self.right_val = 'neut'
+            self.left_cmd = 'neut'
+            self.right_cmd = 'neut'
             self.operator = '=='
         
-        def set_elm(self, key_name: str, val_name: str) -> None:
-            SIDE_VALS = ['nega', 'neut', 'posi']
-            OPE_VALS = ['==', '<', '>']
+        def set_elm(self, key_name: str, cmd_name: str) -> None:
+            SIDE_CMDS = ['nega', 'neut', 'posi', 'random']
+            OPE_CMDS = ['==', '<', '>']
 
             match key_name:
                 case 'operator':
-                    if val_name in OPE_VALS:
-                        self.operator = val_name
+                    if cmd_name in OPE_CMDS:
+                        self.operator = cmd_name
                     else:
-                        raise ValueError('not {val_name} in OPE_VALS')
+                        raise ValueError('not {cmd_name} in OPE_CMDS')
                 case 'left'|'right':
-                    if val_name in SIDE_VALS:
-                        if key_name == 'left': self.left_val = val_name
-                        if key_name == 'right': self.right_val = val_name
+                    if cmd_name in SIDE_CMDS:
+                        if key_name == 'left': self.left_cmd = cmd_name
+                        if key_name == 'right': self.right_cmd = cmd_name
                     else:
-                        raise ValueError('not {val_name} in SIDE_VALS')
+                        raise ValueError('not {cmd_name} in SIDE_CMDS')
                 case _:
                     raise ValueError('not {key_name} in KEYS')
             
@@ -155,7 +170,7 @@ if __name__=='__main__':
         passwd='root',
         db='santaku_db')
     cursor = connection.cursor()
-    cursor.execute('SELECT * FROM santaku_customerbotflow')
-    rows = cursor.fetchall()
+    cursor.execute('SELECT posi_point FROM santaku_customerbotflow')
+    rows = cursor.fetchone()[0]
     print(rows)
     connection.close()
