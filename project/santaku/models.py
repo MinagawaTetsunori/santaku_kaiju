@@ -20,7 +20,7 @@ class CustomerBotFlow(models.Model):
     '''
     客人役の対話フロー
     '''
-    customer_bot_id = models.ForeignKey(CustomerBot, on_delete=models.CASCADE)
+    customer_bot = models.ForeignKey(CustomerBot, on_delete=models.CASCADE)
     my_flow_id = models.IntegerField(default=0)
 
     nega_point = models.IntegerField(
