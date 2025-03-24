@@ -2,26 +2,38 @@ import random
 import MySQLdb
 
 
-def gacha_ability(keeped_ability: dict[str, int]) -> list[str]:
+
+def game():
+    '''
+    ゲームのメイン部分
+    1回分
+    '''
+    # 1.商人役を作る
+    merchant = Merchant('商人A')
+    merchant.keeped_abilities = {'posi': 1, 'const_1': 1}
+
+    # 2.最初のmind編集
+    # 3.客役1人とコミュ
+    # 4.ガチャ1回
+    # 5.再編集
+    # 6.終了(続きはまた今度)
+
+
+
+def gacha_ability(keeped_abilities: dict[str, int]) -> list[str]:
     '''
     レベルが上がった時のアビリティ抽選
     ユーザーに選ばせるアビリティを三択で出力
     '''
-    # 数値が高いほど排出率が高い, class別途で作った方がいいかも
-    emissions = {
-        'hint_purpose_repair': 5,
-        'hint_purpose_grows': 5,
-        'hint_purpose_revenge': 5,
-        'hint_relation_myself': 5,
-        'hint_relation_important': 5,
-        'hint_relation_other': 5,
-        'hint_support_empathy': 5,
-        'hint_support_advice': 5,
-        'hint_support_boost': 5
+    # 数値が高いほど排出率が高い
+    EMISSIONS = {
+        'nega': 5, 'neut': 5, 'posi': 5, 
+        'random': 5, 
+        'const_-1': 5, 'const_0': 5, 'const_1': 5
     }
 
     emissions = {
-        k: emissions[k] - keeped_ability[k] for k in emissions
+        k: EMISSIONS[k] - keeped_abilities[k] for k in EMISSIONS
     }
 
     # emissionの残数分keyを排出abilioty名として格納
@@ -39,34 +51,12 @@ def gacha_ability(keeped_ability: dict[str, int]) -> list[str]:
     
 
 
-def game():
-    '''
-    ゲームのメイン部分
-    '''
-    # 客役のサンプルフロー
-    SCENARIO_FLOW = [
-        {
-            'event_id': 1,
-            'utt': 'aaaa',
-            'hints': {'purpose': '', 'relation': '', 'support': ''},
-            'branch':{
-                'nega': {
-                    'customer_response_utt': 'aaa',
-                    'jump_event_id': 0
-                },
-                'neut': {},
-                'posi': {}
-            }
-        }
-    ]
-
-
-
 class Merchant:
     def __init__(self, name: str = 'unknown'):
         self.name = name
         self.bounus_santaku = 'neut'
         self.bullets: list[self.Bullet] = [self.Bullet()]
+        self.keeped_abilities: dict[str, int] = {}
     
     def add_new_bullet(self) -> None:
         self.bullets.Add(self.Bullet())
@@ -120,11 +110,24 @@ class Merchant:
                     my_flow_id = {flow_id}
                     ''')
                 rslt_scval = float(cursor.fetchone()[0])
+            case 'const_-1'|'const_0'|'const_1':
+                rslt_scval = float(calc_cmd.replace('const_', ''))
+            case 'random':
+                items: list[str] = ['nega', 'neut', 'posi']
+                cursor.execute(
+                    f'''
+                    SELECT {random.choices(items)}_point 
+                    FROM santaku_customerbotflow 
+                    WHERE 
+                    customer_bot_id = {customer_id} and 
+                    my_flow_id = {flow_id}
+                    ''')
+                rslt_scval = float(cursor.fetchone()[0])
             case _:
                 pass
 
         connection.close()
-        return 0.0
+        return rslt_scval
 
 
     class Bullet:
@@ -146,7 +149,10 @@ class Merchant:
             self.operator = '=='
         
         def set_elm(self, key_name: str, cmd_name: str) -> None:
-            SIDE_CMDS = ['nega', 'neut', 'posi', 'random']
+            SIDE_CMDS = [
+                'nega', 'neut', 'posi', 'random', 
+                'const_-1', 'const_0', 'const_1'
+            ]
             OPE_CMDS = ['==', '<', '>']
 
             match key_name:
@@ -158,7 +164,7 @@ class Merchant:
                 case 'left'|'right':
                     if cmd_name in SIDE_CMDS:
                         if key_name == 'left': self.left_cmd = cmd_name
-                        if key_name == 'right': self.right_cmd = cmd_name
+                        elif key_name == 'right': self.right_cmd = cmd_name
                     else:
                         raise ValueError('not {cmd_name} in SIDE_CMDS')
                 case _:
@@ -168,7 +174,7 @@ class Merchant:
 
 if __name__=='__main__':
     merchant = Merchant('AA')
-    print(merchant.calc_scval(1, 0, 'neut'))
+    print(merchant.calc_scval(1, 0, 'nega'))
     # connection = MySQLdb.connect(
     #     host='db',
     #     user='root',
