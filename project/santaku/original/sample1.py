@@ -13,11 +13,18 @@ def game():
     merchant.keeped_abilities = {'posi': 1, 'const_1': 1}
 
     # 2.最初のmind編集
+    edit_mind()
+
     # 3.客役1人とコミュ
     # 4.ガチャ1回
     # 5.再編集
     # 6.終了(続きはまた今度)
 
+
+def edit_mind():
+    '''
+    コンソール上でmind編集する用
+    '''
 
 
 def gacha_ability(keeped_abilities: dict[str, int]) -> list[str]:
