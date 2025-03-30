@@ -1,6 +1,9 @@
 import random
 import MySQLdb
 
+'''
+主にコンソール上での機能テストを行う
+'''
 
 
 def game():
@@ -13,18 +16,12 @@ def game():
     merchant.keeped_abilities = {'posi': 1, 'const_1': 1}
 
     # 2.最初のmind編集
-    edit_mind()
+    merchant.edit_mind()
 
     # 3.客役1人とコミュ
     # 4.ガチャ1回
     # 5.再編集
     # 6.終了(続きはまた今度)
-
-
-def edit_mind():
-    '''
-    コンソール上でmind編集する用
-    '''
 
 
 def gacha_ability(keeped_abilities: dict[str, int]) -> list[str]:
@@ -64,6 +61,19 @@ class Merchant:
         self.bounus_santaku = 'neut'
         self.bullets: list[self.Bullet] = [self.Bullet()]
         self.keeped_abilities: dict[str, int] = {}
+
+
+    def edit_mind(self) -> None:
+        '''
+        コンソール上でmind編集する用
+        '''
+        # 1.変更するcmdをbullet>cond>cmdの順で選択
+        # 1.1.今あるbulletの数を表示
+        print(f'stock_bullets: {len(self.bullets)}')
+        choice_bullet_idx: str = input('choice_bullet_idx(stasrt=0): ')
+        # 
+        # 2.選択肢の番号を入力して変更完了
+
     
     def add_new_bullet(self) -> None:
         self.bullets.Add(self.Bullet())
@@ -180,8 +190,10 @@ class Merchant:
 
 
 if __name__=='__main__':
-    merchant = Merchant('AA')
-    print(merchant.calc_scval(1, 0, 'nega'))
+    game()
+    # merchant = Merchant('AA')
+    # print(merchant.calc_scval(1, 0, 'nega'))
+
     # connection = MySQLdb.connect(
     #     host='db',
     #     user='root',
