@@ -191,6 +191,7 @@ class Merchant:
 
 if __name__=='__main__':
     game()
+
     # merchant = Merchant('AA')
     # print(merchant.calc_scval(1, 0, 'nega'))
 
